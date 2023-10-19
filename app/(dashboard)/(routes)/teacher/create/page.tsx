@@ -37,12 +37,14 @@ const CreatePage = () => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             const response = await axios.post("/api/courses", values);
-            router.push(`/teacher/courses/${response.data.id}`);
+            router.push(`/teacher/courses/${response.data.uuid}`);
+            toast.success("Curso creado");
         } catch (error) {
             //console.log("ha ocurrido un error");
             toast.error("Ha ocurrido un error");
         }
     }
+
 
     return (
         <div className="max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6">
