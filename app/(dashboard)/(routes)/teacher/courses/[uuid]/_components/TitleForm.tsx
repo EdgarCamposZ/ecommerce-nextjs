@@ -19,10 +19,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-interface TitleFormProps {
+interface TitleFormProps { 
     initialData: {
         titulo: string;
-    };
+    }; 
     id_curso: number;
 };
 
@@ -38,7 +38,12 @@ export const TitleForm = ({
 }: TitleFormProps) => {
     const [isEditing, setIsEditing] = useState(false);
 
-    const toggleEdit = () => setIsEditing((current) => !current);
+    const toggleEdit = () => {
+        setIsEditing((current) => !current);
+        if (!isEditing) {
+            form.setValue("titulo", initialData.titulo);
+        }
+    };
 
     const router = useRouter();
 

@@ -1,9 +1,10 @@
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
-//import { IconBadge } from "@/components/IconBadge";
 import { LayoutDashboard } from "lucide-react";
-import { TitleForm } from "@/app/(dashboard)/_components/TitleForm";
+import { TitleForm } from "./_components/TitleForm";
+import { DescriptionForm } from "./_components/DescriptionForm";
+import { ImageForm } from "./_components/ImageForm";
 
 const CourseUuidPage = async ({
     params
@@ -20,6 +21,7 @@ const CourseUuidPage = async ({
     const course = await db.tbl_cursos.findFirst({
         where: {
             uuid: params.uuid,
+            id_usuario: userId
         }
     });
 
@@ -28,11 +30,11 @@ const CourseUuidPage = async ({
     }
 
     const requiredFields = [
-        course?.titulo,
-        course?.descripcion,
-        course?.imagen_url,
-        course?.precio,
-        course?.id_categoria];
+        course.titulo,
+        course.descripcion,
+        course.imagen_url,
+        course.precio,
+        course.id_categoria];
 
     const totalFields = requiredFields.length;
     const completedFields = requiredFields.filter(Boolean).length;
@@ -62,6 +64,14 @@ const CourseUuidPage = async ({
                         </h2>
                     </div>
                     <TitleForm
+                        initialData={course}
+                        id_curso={course.id_curso}
+                    />
+                    <DescriptionForm
+                        initialData={course}
+                        id_curso={course.id_curso}
+                    />
+                    <ImageForm
                         initialData={course}
                         id_curso={course.id_curso}
                     />
