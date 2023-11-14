@@ -20,12 +20,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Combobox } from "@/components/ui/combobox";
-
 interface CategoryFormProps {
-    initialData: tbl_cursos;
+    initialData: tbl_cursos & { categoria: tbl_categorias | null };
     id_curso: number;
     options: { label: string; value: number }[];
-    category: any;
 };
 
 const formSchema = z.object({
@@ -36,7 +34,6 @@ export const CategoriesForm = ({
     initialData,
     id_curso,
     options,
-    category,
 }: CategoryFormProps) => {
     const [isEditing, setIsEditing] = useState(false);
 
@@ -93,7 +90,7 @@ export const CategoriesForm = ({
                     "mt-2",
                     !initialData.id_categoria && "italic"
                 )}>
-                    {category || "* Sin categoria *"}
+                    {initialData.categoria?.nombre || "* Sin categoria *"}
                 </p>
             )}
             {isEditing && (

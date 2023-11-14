@@ -1,12 +1,14 @@
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
-import { CircleDollarSign, LayoutDashboard } from "lucide-react";
+import { CircleDollarSign, File, LayoutDashboard } from "lucide-react";
 import { TitleForm } from "./_components/TitleForm";
 import { DescriptionForm } from "./_components/DescriptionForm";
 import { ImageForm } from "./_components/ImageForm";
 import { CategoriesForm } from "./_components/CategoriesForm";
 import { PriceForm } from "./_components/PriceForm";
+import { Prisma } from "@prisma/client";
+import { AttachmentsForm } from "./_components/AttachmentsForm";
 
 const CourseUuidPage = async ({
     params
@@ -24,7 +26,11 @@ const CourseUuidPage = async ({
         where: {
             uuid: params.uuid,
             id_usuario: userId
-        }
+        },
+        include: {
+            categoria: true,
+            adjuntos: true
+        },
     });
 
     const categories = await db.tbl_categorias.findMany({
@@ -32,15 +38,6 @@ const CourseUuidPage = async ({
             nombre: "asc"
         }
     });
-
-    if (course?.id_categoria !== null) {
-        let category = await db.tbl_categorias.findUnique({
-            where: {
-                id_categoria: course?.id_categoria
-            }
-        });
-        var categoryName = category?.nombre;
-    }
 
     if (!course) {
         return redirect("/");
@@ -95,7 +92,6 @@ const CourseUuidPage = async ({
                             label: category.nombre,
                             value: category.id_categoria,
                         }))}
-                        category={categoryName}
                     />
                     <ImageForm
                         initialData={course}
@@ -112,6 +108,18 @@ const CourseUuidPage = async ({
                         </h2>
                     </div>
                     <PriceForm
+                        initialData={course}
+                        id_curso={course.id_curso}
+                    />
+                    <div className="flex items-center gap-x-2">
+                        <div className="rounded-full flex items-center justify-center bg-sky-100 dark:bg-[#1f1f1f] p-2">
+                            <File className="h-8 w-8 text-teal-700 dark:text-yellow-500" />
+                        </div>
+                        <h2 className="text-xl">
+                            Recursos y Adjuntos (Opcional)
+                        </h2>
+                    </div>
+                    <AttachmentsForm
                         initialData={course}
                         id_curso={course.id_curso}
                     />
