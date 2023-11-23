@@ -3,35 +3,45 @@
 import { UserButton } from "@clerk/nextjs";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
+import { LogOut, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { SearchInput } from "@/components/SearchInput";
 
 export const NavbarRoutes = () => {
     const pathname = usePathname();
+
     const isTeacherPage = pathname?.startsWith("/teacher");
     const isPlayerPage = pathname?.includes("/chapter");
+    const isSearchPage = pathname === "/search";
 
     return (
-        <div className="flex gap-x-8 ml-auto">
-            {isTeacherPage || isPlayerPage ? (
-                <Link href="/">
-                    <Button size="sm" variant='customghost'>
-                        <LogOut className="h-4 w-4 mr-2" />
-                        Salir
-                    </Button>
-                </Link>
-            ) : (
-                <Link href="/teacher/courses">
-                    <Button size="sm" variant='customghost'>
-                        Modo Profesor
-                    </Button>
-                </Link>
+        <>
+            {isSearchPage && (
+                <div className="hidden md:block">
+                    <SearchInput />
+                </div>
             )}
-            <UserButton
-                afterSignOutUrl="/"
-            />
-            <ModeToggle />
-        </div>
+            <div className="flex gap-x-8 ml-auto">
+                {isTeacherPage || isPlayerPage ? (
+                    <Link href="/">
+                        <Button size="sm" variant='customghost'>
+                            <LogOut className="h-4 w-4 mr-2" />
+                            Salir
+                        </Button>
+                    </Link>
+                ) : (
+                    <Link href="/teacher/courses">
+                        <Button size="sm" variant='customghost'>
+                            Modo Profesor
+                        </Button>
+                    </Link>
+                )}
+                <UserButton
+                    afterSignOutUrl="/"
+                />
+                <ModeToggle />
+            </div>
+        </>
     );
 }
