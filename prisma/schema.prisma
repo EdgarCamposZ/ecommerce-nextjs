@@ -26,6 +26,7 @@ model tbl_cursos {
   categoria    tbl_categorias? @relation(fields: [id_categoria], references: [id_categoria])
 
   adjuntos tbl_adjuntos[]
+  compras tbl_compras[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -56,3 +57,25 @@ model tbl_adjuntos {
   @@index([id_curso])
 }
 
+model tbl_compras {
+  id_compra  String @id @default(uuid())
+  userId String
+
+  id_curso   Int
+  curso      tbl_cursos @relation(fields: [id_curso], references: [id_curso], onDelete: Cascade)
+  curso_uuid String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt()
+
+  @@unique([userId, curso_uuid])
+  @@index([id_curso])
+}
+
+model tbl_stripe_clientes {
+  id               String @id @default(uuid())
+  userId           String @unique
+  stripeCustomerId String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
